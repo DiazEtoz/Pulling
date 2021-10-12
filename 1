@@ -1,0 +1,98 @@
+#
+#  Panoramix v4 Oct 2019 
+#  Decompiled source of 0xdE6F0F915Bd3237c3e2363702Ea173a27cae2434
+# 
+#  Let's make the world open source 
+# 
+#
+#  I failed with these: 
+#  - withdrawETH()
+#  All the rest is below.
+#
+
+const owner = 0x58929BDE3EEa4327EdE7030dCFACC9233f54064C
+
+def storage:
+  stor0 is addr at storage 0
+  count is uint256 at storage 1
+
+def count(): # not payable
+  return count
+
+#
+#  Regular functions
+#
+
+def _fallback() payable: # default function
+  revert
+
+def onERC721Received(address _operator, address _from, uint256 _tokenId, bytes _data): # not payable
+  require calldata.size - 4 >=′ 128
+  require _operator == _operator
+  require _from == _from
+  require _data <= 18446744073709551615
+  require _data + 35 <′ calldata.size
+  require _data.length <= 18446744073709551615
+  require _data + _data.length + 36 <= calldata.size
+  return Mask(32, 224, sha3(0xfe6f6e455243373231526563656976656428616464726573732c616464726573732c75696e743235362c6279746573))
+
+def unknown7b9a64ad(uint256 _param1, uint256 _param2, uint256 _param3): # not payable
+  require calldata.size - 4 >=′ 96
+  require _param1 == addr(_param1)
+  if 0xf896d7e210a8e0100ef9bdcc18a981121aac88b5 != caller:
+      revert with 0, 'Ownable: caller is not the owner'
+  idx = _param2
+  while idx <= _param3:
+      mem[96] = 0x42842e0e00000000000000000000000000000000000000000000000000000000
+      mem[100] = this.address
+      mem[132] = addr(_param1)
+      mem[164] = idx
+      require ext_code.size(stor0)
+      call stor0.safeTransferFrom(address from, address to, uint256 tokenId) with:
+           gas gas_remaining wei
+          args this.address, addr(_param1), idx
+      if not ext_call.success:
+          revert with ext_call.return_data[0 len return_data.size]
+      if idx == -1:
+          revert with 0, 17
+      idx = idx + 1
+      continue 
+
+def start(uint256 _winPrice) payable: 
+  require calldata.size - 4 >=′ 32
+  require ext_code.size(stor0)
+  static call stor0.saleIsActive() with:
+          gas gas_remaining wei
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >=′ 32
+  require ext_call.return_data == bool(ext_call.return_data[0])
+  require ext_call.return_data[0]
+  require ext_code.size(stor0)
+  static call stor0.MAX_AMOUNT() with:
+          gas gas_remaining wei
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >=′ 32
+  require ext_code.size(stor0)
+  static call stor0.totalSupply() with:
+          gas gas_remaining wei
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >=′ 32
+  if ext_call.return_data > !_winPrice:
+      revert with 0, 17
+  require ext_call.return_data_winPrice <= ext_call.return_data[0]
+  idx = 0
+  while idx < _winPrice:
+      mem[(4 * ceil32(return_data.size)) + 96] = 0x2004ffd900000000000000000000000000000000000000000000000000000000
+      require ext_code.size(stor0)
+      call stor0.mintToken() with:
+         value 404 * 10^15 wei
+           gas gas_remaining wei
+      if not ext_call.success:
+          revert with ext_call.return_data[0 len return_data.size]
+      if idx == -1:
+          revert with 0, 17
+      idx = idx + 1
+      continue 
